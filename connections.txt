@@ -1,0 +1,39 @@
+======Host board======
+
+block diagram:
+rj45 socket - MAX485 - arduino leonardo - USB to PC
+          '-- 12V in connector
+
+
+rj45 pins6,7,8 - connector 12V
+arduino VCC - MAX485 VCC
+arduino GND - MAX485 GND - rj45 pins1,2,3 - connector GND
+
+MAX485 RE - MAX485 DE - arduino pin2
+
+MAX485 RO - arduino RX
+MAX485 DI - arduino TX
+
+MAX485 A - rj45 pin4
+MAX485 B - rj45 pin5
+
+======sensor board======
+
+block diagram:
+rj45 socket - MAX485 - arduino pro mini - 4 pin connector - sensor
+          '-- 12V out screw terminals
+
+arduino RAW - rj45 pins6,7,8 - terminals 12V
+arduino VCC - sensor +V  (red wire) - MAX485 VCC
+arduino GND - sensor GND (blk wire) - MAX485 GND - rj45 pins1,2,3 - terminals GND
+
+MAX485 DE - MAX485 RE - arduino pin2
+
+MAX485 RO - arduino RX
+MAX485 DI - arduino TX
+
+MAX485 A - rj45 pin4
+MAX485 B - rj45 pin5
+
+arduino A0 - sensor TMP (green wire)
+arduino A1 - sensor RV (blue wire)
