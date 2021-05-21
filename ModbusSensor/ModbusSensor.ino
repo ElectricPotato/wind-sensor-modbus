@@ -77,7 +77,7 @@ void setup() {
   digitalWrite(JmprPinGND1, LOW);
   
   delay(100);
-  int ID = getJumperID();
+  int ID = getJumperID()+1;
   // start the Modbus RTU server, with id set by jumpers (from 0 to 3)
   if (!ModbusRTUServer.begin(ID, 9600)) {
     //Serial.println("Failed to start Modbus RTU Server!");//debug

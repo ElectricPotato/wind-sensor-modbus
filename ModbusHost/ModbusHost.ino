@@ -11,7 +11,7 @@ void setup() {
 
   //start modbus client at baud 9600. Client does not have an ID, as its not addressed by server
   if (!ModbusRTUClient.begin(9600)) {
-    Serial.println("Failed to start Modbus RTU Client!");
+    Serial.println("Failed to start Modbus RTU Client! Unplug and replug the USB cable");
     while (1);
   }
 }
@@ -24,27 +24,24 @@ uint16_t sensorVal;
 void loop() {
   for(int i=0;i<nSensorNodes;i++){
     //read register 0x00 (sensor reading), on device with ID i
-    sensorVal=ModbusRTUClient.inputRegisterRead(i, 0x00);
-    
-    if (sensorVal==-1) {
-      //Serial.print("Fail read ");//debug
-      //Serial.print(i);//debug
-      //Serial.print(" ");//debug
-      //Serial.println(ModbusRTUClient.lastError());//debug
-      sensorReading[i]=0;
-    }else{
-      //divide the recieved value by 500, as its multiplied by 500 at the other end
-      sensorReading[i]=sensorVal/500.0;
-    }
-    delay(1);
+      sensorVal=ModbusRTUClient.inputRegisterRead(i+1, 0x00); //read from IDs 1 through 4
+      if (sensorVal==-1) {
+        //Serial.print("Fail read ID");//debug
+        //Serial.print(i+1);//debug
+        //Serial.print(" ");//debug
+        //Serial.println(ModbusRTUClient.lastError());//debug
+        sensorReading[i]=0;
+      }else{
+        //divide the recieved value by 500, as its multiplied by 500 at the other end
+        sensorReading[i]=(sensorVal+1)/500.0;
+      }
+      delay(10);
   }
   
   //output format: 4 numbers seperated by tabs. nothing else
   for(int i=0;i<nSensorNodes;i++){
     Serial.print(sensorReading[i],3);
-    if(i!=nSensorNodes){
-      Serial.print("\t");
-    }
+    Serial.print("\t");
   }
   Serial.println();
   delay(1);
