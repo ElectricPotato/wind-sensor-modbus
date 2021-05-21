@@ -7,11 +7,11 @@
 
 #define ledPin LED_BUILTIN
 
-//Jumpers to set bus ID
+// Jumpers to set sensor ID
 #define IDJumperPin0 7 //LSB
 #define IDJumperPin1 8 //MSB
 
- //using an IO pin as ground for the jumpers means less wiring
+// using an IO pin as ground for the jumpers means less wiring
 #define JmprPinGND0 9
 #define JmprPinGND1 6
 
@@ -59,8 +59,8 @@ int getWindSpeedMPHx500(){
 //get the bus ID of the device from the jumpers on each module
 //no jumper = logic high = !1 = 0
 //jumper = pulled low = !0 = 1
+//return a number 0 to 3
 int getJumperID(){
-  //return 1;
   return !digitalRead(IDJumperPin0) + 2*!digitalRead(IDJumperPin1); //+4*!digitalRead(IDJumperPin2)+8*...
 }
 
@@ -78,7 +78,7 @@ void setup() {
   
   delay(100);
   int ID = getJumperID()+1;
-  // start the Modbus RTU server, with id set by jumpers (from 0 to 3)
+  // start the Modbus RTU server, with id set by jumpers (from 1 to 4)
   if (!ModbusRTUServer.begin(ID, 9600)) {
     //Serial.println("Failed to start Modbus RTU Server!");//debug
     while (1);
@@ -97,6 +97,7 @@ void setup() {
 void loop() {
   // poll for Modbus RTU requests
   ModbusRTUServer.poll();
+  //update reading register with sensor reading
   uint16_t sensorVal = getWindSpeedMPHx500();
   ModbusRTUServer.inputRegisterWrite(0x00, sensorVal);
 }
